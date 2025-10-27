@@ -39,28 +39,8 @@ def place_image(image: Image.Image) -> Image.Image:
      x = int((canvas_width - image_width) / 2)
      y = int((canvas_height - image_height) / 2)
 
-     mask = img if img.mode in ("RGBA", "LA") else None
+     mask = image if image.mode in ("RGBA", "LA") else None
 
      canvas.paste(image, (x,y), mask)
      return(canvas)
 
-
-ROOT_DIR = Path(__file__).resolve().parents[2]
-
-INPUT_DIR = ROOT_DIR/"samples"/"input"
-OUTPUT_DIR = ROOT_DIR/"samples"/"output"
-
-
-for img_path in INPUT_DIR.iterdir():
-    if img_path.suffix.lower() in (".jpg", ".jpeg", ".png"):
-           with Image.open(img_path) as img:
-                stem = img_path.stem # Everything before the file extension
-                img = ImageOps.exif_transpose(img)
-                if img.mode in {"RGBA", "LA"} or (img.mode == "P" and "transparency" in img.info):
-                    img = img.convert("RGBA")
-                else:
-                     img = img.convert("RGB")
-                img = resize_image(img)
-                img = place_image(img)
-                out_path = OUTPUT_DIR / f"{stem}.jpg"
-                img.save(out_path, "JPEG", quality = 90) 
