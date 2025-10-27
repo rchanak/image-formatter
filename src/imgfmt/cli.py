@@ -2,6 +2,8 @@ import argparse
 from pathlib import Path
 from PIL import Image, ImageOps
 from .core import resize_image, place_image
+from .log import get_logger
+import time
 
 VALID_EXTENSIONS = (".apng", ".png", ".avif", ".jpeg", ".jpg", ".jfif", ".pjpeg", ".pjp", ".svg", ".webp")
 
@@ -19,13 +21,20 @@ def build_parser() -> argparse.ArgumentParser:
 
     return p
 
-def process_dir(input_dir: Path, output_dir: Path) -> None:
+def process_dir(input_dir: Path, output_dir: Path, logger, demo: bool = False) -> None:
+    """
+    
+    
+    """
 
     for p in input_dir.iterdir():
         if not p.is_file():
             continue
+        name = p.name
+        if name.endswith(":Zone.Identifier") or p.suffix.lower() == ":zone.identifier":
+            continue
         if p.suffix.lower() not in VALID_EXTENSIONS:
-            print(f"[SKIP] unsupported: {p.name}")
+            logger.warning("[SKIP] Unsupported File type: %s", p.name)
             continue
         try:
             with Image.open(p) as img:
@@ -41,9 +50,9 @@ def process_dir(input_dir: Path, output_dir: Path) -> None:
 
                 out_path = output_dir / f"{stem}.jpg"
                 result.save(out_path, "JPEG", quality=90)
-                print(f"[SUCCESS] {p.name} -> {out_path.name}")
+                logger.info("[SUCCESS] %s -> %s", name, out_path.name)
         except Exception as e:
-            print(f"[ERROR] {p.name}: {e}")
+            logger.exception("[ERROR] %s: %s", name, e)
 
 def main(argv=None):
     args = build_parser().parse_args(argv)
@@ -60,7 +69,18 @@ def main(argv=None):
             return
         input_dir = Path(args.input_dir)
         output_dir = Path(args.output_dir)
-    process_dir(input_dir, output_dir)
+    
+    log_dir = getattr(args, "log_dir", None) or (output_dir / "_logs")
+    log_dir.mkdir(parents=True, exist_ok=True)
+    logger = get_logger(log_dir=log_dir)
+
+    start = time.perf_counter()
+    logger.info("Starting image formatting...")
+    try:
+        process_dir(input_dir, output_dir, logger, demo=args.demo)
+    finally:
+        elapsed = time.perf_counter() - start
+        logger.info("Run complete in %.2fs", elapsed)
 
 if __name__ == "__main__":
     main()

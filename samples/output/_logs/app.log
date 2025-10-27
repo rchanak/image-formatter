@@ -1,0 +1,8 @@
+2025-10-26 19:54:25,648 | INFO     | Starting image formatting...
+2025-10-26 19:54:25,754 | INFO     | Run complete in 0.11s
+2025-10-26 20:03:03,895 | INFO     | Starting image formatting...
+2025-10-26 20:03:03,920 | INFO     | [SUCCESS] transparent_png_1.png -> transparent_png_1.jpg
+2025-10-26 20:03:03,984 | INFO     | [SUCCESS] avif_1.avif -> avif_1.jpg
+2025-10-26 20:03:03,994 | INFO     | [SUCCESS] long_png_1.png -> long_png_1.jpg
+2025-10-26 20:03:04,005 | INFO     | [SUCCESS] square_png_1.png -> square_png_1.jpg
+2025-10-26 20:03:04,006 | INFO     | Run complete in 0.11s
