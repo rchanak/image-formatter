@@ -6,3 +6,9 @@
 2025-10-26 20:03:03,994 | INFO     | [SUCCESS] long_png_1.png -> long_png_1.jpg
 2025-10-26 20:03:04,005 | INFO     | [SUCCESS] square_png_1.png -> square_png_1.jpg
 2025-10-26 20:03:04,006 | INFO     | Run complete in 0.11s
+2025-10-31 21:13:11,437 | INFO     | Starting image formatting...
+2025-10-31 21:13:11,458 | INFO     | [SUCCESS] transparent_png_1.png -> transparent_png_1.jpg
+2025-10-31 21:13:11,525 | INFO     | [SUCCESS] avif_1.avif -> avif_1.jpg
+2025-10-31 21:13:11,534 | INFO     | [SUCCESS] long_png_1.png -> long_png_1.jpg
+2025-10-31 21:13:11,546 | INFO     | [SUCCESS] square_png_1.png -> square_png_1.jpg
+2025-10-31 21:13:11,547 | INFO     | Run complete in 0.11s

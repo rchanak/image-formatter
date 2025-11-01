@@ -7,6 +7,26 @@ import time
 
 VALID_EXTENSIONS = (".apng", ".png", ".avif", ".jpeg", ".jpg", ".jfif", ".pjpeg", ".pjp", ".svg", ".webp")
 
+def ok_to_delete_input(p: Path, input_dir: Path, demo: bool) -> bool:
+    if demo:
+        return False
+    repo_root = Path(__file__).resolve().parents[2]
+    samples_dir = (repo_root / "samples").resolve()
+
+    try:
+        if samples_dir in input_dir.resolve().parents or samples_dir == input_dir.resolve():
+            return False
+        if samples_dir in p.resolve().parents:
+            return False
+    except Exception:
+        return False
+    
+    try:
+        p.resolve().relative_to(input_dir.resolve())
+    except Exception:
+        return False
+    return True
+
 
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
@@ -51,6 +71,13 @@ def process_dir(input_dir: Path, output_dir: Path, logger, demo: bool = False) -
                 out_path = output_dir / f"{stem}.jpg"
                 result.save(out_path, "JPEG", quality=90)
                 logger.info("[SUCCESS] %s -> %s", name, out_path.name)
+                if ok_to_delete_input(p, input_dir, demo):
+                    try:
+                        p.unlink()
+                        logger.info("[SUCCESS] deleted source %s", p.name)
+                    except Exception as e:
+                        logger.warning("[WARNING] could no delete %s: %s, p.name, e")
+
         except Exception as e:
             logger.exception("[ERROR] %s: %s", name, e)
 
